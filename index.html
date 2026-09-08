@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>Video Speed Calculator</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#111827;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{width:100%;max-width:430px;background:white;border-radius:24px;padding:26px;box-shadow:0 12px 35px rgba(0,0,0,.12)}
+h1{text-align:center;margin:0 0 8px;font-size:28px}
+.sub{text-align:center;color:#6b7280;margin:0 0 25px}
+label{display:block;font-weight:700;margin:16px 0 8px}
+input{width:100%;padding:15px;border:1px solid #d1d5db;border-radius:12px;font-size:18px;outline:none}
+input:focus{border-color:#4f46e5}
+.speeds{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.speeds button{border:1px solid #d1d5db;background:#fff;border-radius:10px;padding:9px 12px;font-weight:600}
+.calc{width:100%;margin-top:22px;padding:16px;border:0;border-radius:13px;background:#4f46e5;color:#fff;font-size:18px;font-weight:700}
+.result{margin-top:22px;padding:20px;border-radius:16px;background:#eef2ff;text-align:center}
+.result small{color:#6b7280}
+.time{font-size:30px;font-weight:800;margin:7px 0}
+.saved{font-size:16px;color:#374151}
+.hint{text-align:center;color:#9ca3af;font-size:13px;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🎬 Video Speed Calculator</h1>
+<p class="sub">Find your actual watching time</p>
+<label for="duration">Video Duration</label>
+<input id="duration" placeholder="Example: 2:00:00" inputmode="text">
+<label for="speed">Playback Speed (×)</label>
+<input id="speed" placeholder="Example: 1.45" inputmode="decimal">
+<div class="speeds">
+<button onclick="setSpeed(1.25)">1.25×</button>
+<button onclick="setSpeed(1.5)">1.5×</button>
+<button onclick="setSpeed(1.75)">1.75×</button>
+<button onclick="setSpeed(2)">2×</button>
+</div>
+<button class="calc" onclick="calculate()">Calculate</button>
+<div class="result">
+<small>Actual Watching Time</small>
+<div class="time" id="result">—</div>
+<div class="saved" id="saved"></div>
+</div>
+<div class="hint">Formula: Video Duration ÷ Playback Speed</div>
+</div>
+<script>
+function setSpeed(v){document.getElementById('speed').value=v;calculate();}
+function parseDuration(x){
+ x=x.trim(); if(!x)return NaN;
+ if(x.includes(':')){
+  let p=x.split(':').map(Number);
+  if(p.some(Number.isNaN))return NaN;
+  if(p.length===3)return p[0]*3600+p[1]*60+p[2];
+  if(p.length===2)return p[0]*60+p[1];
+ }
+ let n=Number(x); return Number.isFinite(n)?n*60:NaN;
+}
+function format(sec){
+ sec=Math.max(0,Math.round(sec));
+ let h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
+ if(h>0)return `${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+ return `${m}m ${String(s).padStart(2,'0')}s`;
+}
+function calculate(){
+ const d=parseDuration(document.getElementById('duration').value);
+ const sp=Number(document.getElementById('speed').value);
+ const r=document.getElementById('result'),saved=document.getElementById('saved');
+ if(!Number.isFinite(d)||d<0||!Number.isFinite(sp)||sp<=0){r.textContent='Enter valid values';saved.textContent='';return;}
+ const actual=d/sp;r.textContent=format(actual);saved.textContent='Time saved: '+format(d-actual);
+}
+</script>
+</body>
+</html>
