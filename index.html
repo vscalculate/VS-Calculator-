@@ -3,74 +3,391 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#111827">
-<title>Video Speed Calculator</title>
+<meta name="theme-color" content="#0f172a">
+<title>VS • Video Speed Calculator</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#111827;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.card{width:100%;max-width:430px;background:white;border-radius:24px;padding:26px;box-shadow:0 12px 35px rgba(0,0,0,.12)}
-h1{text-align:center;margin:0 0 8px;font-size:28px}
-.sub{text-align:center;color:#6b7280;margin:0 0 25px}
-label{display:block;font-weight:700;margin:16px 0 8px}
-input{width:100%;padding:15px;border:1px solid #d1d5db;border-radius:12px;font-size:18px;outline:none}
-input:focus{border-color:#4f46e5}
-.speeds{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.speeds button{border:1px solid #d1d5db;background:#fff;border-radius:10px;padding:9px 12px;font-weight:600}
-.calc{width:100%;margin-top:22px;padding:16px;border:0;border-radius:13px;background:#4f46e5;color:#fff;font-size:18px;font-weight:700}
-.result{margin-top:22px;padding:20px;border-radius:16px;background:#eef2ff;text-align:center}
-.result small{color:#6b7280}
-.time{font-size:30px;font-weight:800;margin:7px 0}
-.saved{font-size:16px;color:#374151}
-.hint{text-align:center;color:#9ca3af;font-size:13px;margin-top:18px}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(145deg,#0f172a,#111827,#1e1b4b);
+  color:#f8fafc;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.container{
+  width:100%;
+  max-width:450px;
+}
+
+.card{
+  background:rgba(15,23,42,.88);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:28px;
+  padding:28px 22px;
+  box-shadow:0 25px 60px rgba(0,0,0,.45);
+  backdrop-filter:blur(15px);
+}
+
+.logo{
+  width:64px;
+  height:64px;
+  margin:0 auto 14px;
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  box-shadow:0 10px 30px rgba(99,102,241,.35);
+}
+
+h1{
+  text-align:center;
+  font-size:29px;
+  margin-bottom:8px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#94a3b8;
+  font-size:14px;
+  margin-bottom:28px;
+}
+
+label{
+  display:block;
+  font-size:15px;
+  font-weight:700;
+  margin-bottom:9px;
+  color:#e2e8f0;
+}
+
+input{
+  width:100%;
+  padding:16px;
+  border-radius:14px;
+  border:1px solid #334155;
+  background:#020617;
+  color:#fff;
+  font-size:17px;
+  outline:none;
+  margin-bottom:20px;
+}
+
+input:focus{
+  border-color:#818cf8;
+  box-shadow:0 0 0 3px rgba(99,102,241,.15);
+}
+
+.speed-buttons{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin:-8px 0 20px;
+}
+
+.speed-buttons button{
+  padding:11px 5px;
+  border:1px solid #334155;
+  border-radius:12px;
+  background:#1e293b;
+  color:#e2e8f0;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.speed-buttons button:hover{
+  background:#312e81;
+  border-color:#6366f1;
+}
+
+button{
+  transition:.2s;
+}
+
+.calculate{
+  width:100%;
+  padding:17px;
+  border:0;
+  border-radius:15px;
+  background:linear-gradient(135deg,#6366f1,#7c3aed);
+  color:white;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 10px 25px rgba(99,102,241,.3);
+}
+
+.calculate:hover{
+  transform:translateY(-1px);
+}
+
+.result{
+  margin-top:22px;
+  padding:22px 16px;
+  border-radius:20px;
+  text-align:center;
+  background:#172554;
+  border:1px solid rgba(129,140,248,.2);
+}
+
+.result-title{
+  color:#94a3b8;
+  font-size:13px;
+  margin-bottom:8px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.time{
+  font-size:30px;
+  font-weight:800;
+  color:#fff;
+  margin-bottom:7px;
+}
+
+.saved{
+  color:#86efac;
+  font-size:14px;
+}
+
+.reset{
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #334155;
+  background:transparent;
+  color:#94a3b8;
+  cursor:pointer;
+}
+
+.footer{
+  text-align:center;
+  color:#64748b;
+  font-size:12px;
+  margin-top:20px;
+}
+
+@media(max-width:380px){
+  .card{
+    padding:22px 16px;
+  }
+
+  h1{
+    font-size:25px;
+  }
+
+  .speed-buttons{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
 </style>
 </head>
+
 <body>
-<div class="card">
-<h1>🎬 Video Speed Calculator</h1>
-<p class="sub">Find your actual watching time</p>
-<label for="duration">Video Duration</label>
-<input id="duration" placeholder="Example: 2:00:00" inputmode="text">
-<label for="speed">Playback Speed (×)</label>
-<input id="speed" placeholder="Example: 1.45" inputmode="decimal">
-<div class="speeds">
-<button onclick="setSpeed(1.25)">1.25×</button>
-<button onclick="setSpeed(1.5)">1.5×</button>
-<button onclick="setSpeed(1.75)">1.75×</button>
-<button onclick="setSpeed(2)">2×</button>
+
+<div class="container">
+  <div class="card">
+
+    <div class="logo">🎬</div>
+
+    <h1>Video Speed Calculator</h1>
+    <p class="subtitle">
+      Find your actual watching time instantly
+    </p>
+
+    <label for="duration">Video Duration</label>
+    <input
+      id="duration"
+      type="text"
+      placeholder="Example: 2:00:00"
+      autocomplete="off"
+    >
+
+    <label for="speed">Playback Speed (×)</label>
+    <input
+      id="speed"
+      type="number"
+      step="0.05"
+      min="0.1"
+      placeholder="Example: 1.5"
+      autocomplete="off"
+    >
+
+    <div class="speed-buttons">
+      <button onclick="setSpeed(1.25)">1.25×</button>
+      <button onclick="setSpeed(1.5)">1.5×</button>
+      <button onclick="setSpeed(1.75)">1.75×</button>
+      <button onclick="setSpeed(2)">2×</button>
+    </div>
+
+    <button class="calculate" onclick="calculate()">
+      Calculate
+    </button>
+
+    <div class="result">
+      <div class="result-title">Actual Watching Time</div>
+      <div class="time" id="result">—</div>
+      <div class="saved" id="saved"></div>
+    </div>
+
+    <button class="reset" onclick="resetCalculator()">
+      Reset
+    </button>
+
+    <div class="footer">
+      Formula: Video Duration ÷ Playback Speed
+    </div>
+
+  </div>
 </div>
-<button class="calc" onclick="calculate()">Calculate</button>
-<div class="result">
-<small>Actual Watching Time</small>
-<div class="time" id="result">—</div>
-<div class="saved" id="saved"></div>
-</div>
-<div class="hint">Formula: Video Duration ÷ Playback Speed</div>
-</div>
+
 <script>
-function setSpeed(v){document.getElementById('speed').value=v;calculate();}
-function parseDuration(x){
- x=x.trim(); if(!x)return NaN;
- if(x.includes(':')){
-  let p=x.split(':').map(Number);
-  if(p.some(Number.isNaN))return NaN;
-  if(p.length===3)return p[0]*3600+p[1]*60+p[2];
-  if(p.length===2)return p[0]*60+p[1];
- }
- let n=Number(x); return Number.isFinite(n)?n*60:NaN;
+
+function setSpeed(value){
+  document.getElementById("speed").value = value;
 }
-function format(sec){
- sec=Math.max(0,Math.round(sec));
- let h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
- if(h>0)return `${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
- return `${m}m ${String(s).padStart(2,'0')}s`;
+
+function parseDuration(value){
+
+  value = value.trim();
+
+  if(!value) return null;
+
+  const parts = value.split(":").map(Number);
+
+  if(parts.some(isNaN)) return null;
+
+  let seconds = 0;
+
+  if(parts.length === 1){
+    seconds = parts[0] * 60;
+  }
+  else if(parts.length === 2){
+    seconds = parts[0] * 60 + parts[1];
+  }
+  else if(parts.length === 3){
+    seconds =
+      parts[0] * 3600 +
+      parts[1] * 60 +
+      parts[2];
+  }
+  else{
+    return null;
+  }
+
+  return seconds > 0 ? seconds : null;
 }
+
+function formatTime(totalSeconds){
+
+  totalSeconds = Math.round(totalSeconds);
+
+  const hours = Math.floor(totalSeconds / 3600);
+
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+  const seconds = totalSeconds % 60;
+
+  const h = hours > 0 ? hours + "h " : "";
+
+  const m = minutes > 0 ? minutes + "m " : "";
+
+  const s = seconds + "s";
+
+  return h + m + s;
+}
+
 function calculate(){
- const d=parseDuration(document.getElementById('duration').value);
- const sp=Number(document.getElementById('speed').value);
- const r=document.getElementById('result'),saved=document.getElementById('saved');
- if(!Number.isFinite(d)||d<0||!Number.isFinite(sp)||sp<=0){r.textContent='Enter valid values';saved.textContent='';return;}
- const actual=d/sp;r.textContent=format(actual);saved.textContent='Time saved: '+format(d-actual);
+
+  const duration =
+    parseDuration(
+      document.getElementById("duration").value
+    );
+
+  const speed =
+    parseFloat(
+      document.getElementById("speed").value
+    );
+
+  const result =
+    document.getElementById("result");
+
+  const saved =
+    document.getElementById("saved");
+
+  if(duration === null){
+
+    result.textContent = "Invalid duration";
+    saved.textContent = "";
+
+    return;
+  }
+
+  if(!speed || speed <= 0){
+
+    result.textContent = "Enter speed";
+    saved.textContent = "";
+
+    return;
+  }
+
+  const actualTime = duration / speed;
+
+  const timeSaved = duration - actualTime;
+
+  result.textContent = formatTime(actualTime);
+
+  if(timeSaved > 0){
+    saved.textContent =
+      "You save " + formatTime(timeSaved);
+  }
+  else{
+    saved.textContent = "";
+  }
 }
+
+function resetCalculator(){
+
+  document.getElementById("duration").value = "";
+
+  document.getElementById("speed").value = "";
+
+  document.getElementById("result").textContent = "—";
+
+  document.getElementById("saved").textContent = "";
+}
+
+document.getElementById("duration")
+.addEventListener("keydown",function(e){
+
+  if(e.key === "Enter"){
+    calculate();
+  }
+
+});
+
+document.getElementById("speed")
+.addEventListener("keydown",function(e){
+
+  if(e.key === "Enter"){
+    calculate();
+  }
+
+});
+
 </script>
+
 </body>
 </html>
